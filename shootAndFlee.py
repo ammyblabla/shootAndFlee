@@ -29,13 +29,17 @@ class SpaceGameWindow(arcade.Window):
     	
     	self.world = World(width, height)
     	self.player_sprite = ModelSprite('images/rocket1.png',model=self.world.player)
-    	self.enemy_sprite = ModelSprite('images/rocket2.png',model=self.world.enemy)
+
+    	self.enemy_sprites = []
+    	for enemy in self.world.enemies:
+        	self.enemy_sprites.append(ModelSprite('images/rocket2.png',scale=0.5,model=enemy))
 
 
     def on_draw(self):
     	arcade.start_render()
     	self.player_sprite.draw()
-    	self.enemy_sprite.draw()
+    	for sprite in self.enemy_sprites:
+    		sprite.draw()
 
     def animate(self, delta):
     	self.world.animate(delta)

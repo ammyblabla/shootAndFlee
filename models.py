@@ -13,14 +13,23 @@ class Charactor(Model):
 		self.x = x
 		self.y = y
 
-
 class World:
+	NUM_ENEMY = 8
+
 	def __init__(self, width, height):
 		self.width = width
 		self.height = height
 
-		self.player = Player(self, width/2 , 0)
-		self.enemy = Enemy(self, width/2, height)
+		self.player = Player(self, width/2 , 56)
+		
+		self.enemies = []
+		self.NUM_ENEMY = 8
+		no_enemy = 0
+		
+		for i in range(World.NUM_ENEMY):
+			enemy = Enemy(self, no_enemy * width / World.NUM_ENEMY + 32, height - 32)
+			self.enemies.append(enemy)
+			no_enemy += 1
 
 	def animate(self, delta):
 		self.player.animate(delta)
@@ -77,4 +86,20 @@ class Enemy(Charactor):
 		self.world = world
 		self.x = x
 		self.y = y
+
+class Bullet(Model):
+	def __init__(self, world, x, y):
+		super(). __init__(world, x, y, 0)
+		self.vx = 1
+		self.vy = 1
+	
+	def animate(self, delta):
+		if (self.x < 0) or (self.x > self.world.width):
+			self.vx -= self.vx
+
+		if (self.y < 0) or (self.y > self.world.width):
+			self.vy -= self.vy
+
+		self.x += self.vx
+		self.y += self.vy
 
