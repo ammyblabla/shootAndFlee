@@ -16,6 +16,13 @@ class SpaceGameWindow(arcade.Window):
     	arcade.start_render()
     	self.player.draw()
 
+    def animate(self, delta):
+    	player = self.player
+
+    	if player.center_x > SCREEN_WIDTH:
+    		player.center_x = 0
+    	self.player.set_position(self.player.center_x + 5, self.player.center_y)
+
 if __name__ == '__main__':
     window = SpaceGameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
     arcade.run()
