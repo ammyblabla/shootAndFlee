@@ -1,11 +1,26 @@
 import arcade.key
 
+class Model:
+	def __init__(self,world,x,y):
+		self.world = world
+		self.x = x
+		self.y = y
+
+class Charactor(Model):
+	def __init__(self, world, x, y):
+		super().__init__(world,x,y)
+		self.world = world
+		self.x = x
+		self.y = y
+
+
 class World:
 	def __init__(self, width, height):
 		self.width = width
 		self.height = height
 
 		self.player = Player(self, width/2 , 0)
+		self.enemy = Enemy(self, width/2, height)
 
 	def animate(self, delta):
 		self.player.animate(delta)
@@ -23,13 +38,14 @@ class World:
 				self.player.isPress = False
 				self.player.switch_direction("still")
 
-class Player:
+class Player(Charactor):
 	DIR_LEFT = -1
 	DIR_STILL = 0
 	DIR_RIGHT = 1
 	isPress = False
 
 	def __init__(self, world, x, y):
+		super().__init__(world,x,y)
 		self.world = world
 		self.x = x
 		self.y = y
@@ -54,3 +70,11 @@ class Player:
 			self.direction = Player.DIR_RIGHT
 		elif new_direction == "still":
 			self.direction = Player.DIR_STILL
+
+class Enemy(Charactor):
+	def __init__(self, world, x, y):
+		super().__init__(world,x,y)
+		self.world = world
+		self.x = x
+		self.y = y
+
