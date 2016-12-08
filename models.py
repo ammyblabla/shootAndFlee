@@ -12,6 +12,8 @@ class Charactor(Model):
 		self.world = world
 		self.x = x
 		self.y = y
+		self.bullets = []
+
 
 class World:
 	NUM_ENEMY = 8
@@ -35,17 +37,10 @@ class World:
 		self.player.animate(delta)
 
 	def on_key_press(self, key, key_modifiers):
-		if key == arcade.key.LEFT:
-			self.player.switch_direction("left")
-		if key == arcade.key.RIGHT:
-			self.player.switch_direction("right")
-		self.player.isPress = True
+		self.player.on_key_press(key,key_modifiers)
 
 	def on_key_release(self, key, key_modifiers):
-		if key == arcade.key.LEFT or key == arcade.key.RIGHT:
-			if self.player.isPress == True:
-				self.player.isPress = False
-				self.player.switch_direction("still")
+		self.player.on_key_release(key,key_modifiers)
 
 class Player(Charactor):
 	DIR_LEFT = -1
@@ -59,6 +54,7 @@ class Player(Charactor):
 		self.x = x
 		self.y = y
 		self.direction = Player.DIR_STILL
+		self.isPress = False
 
 	def animate(self,delta):
 		if self.direction == Player.DIR_RIGHT:
@@ -79,6 +75,19 @@ class Player(Charactor):
 			self.direction = Player.DIR_RIGHT
 		elif new_direction == "still":
 			self.direction = Player.DIR_STILL
+
+	def on_key_press(self, key, key_modifiers):
+		if key == arcade.key.LEFT:
+			self.switch_direction("left")
+		if key == arcade.key.RIGHT:
+			self.switch_direction("right")
+		self.isPress = True
+
+	def on_key_release(self, key, key_modifiers):
+		if key == arcade.key.LEFT or key == arcade.key.RIGHT:
+			if self.isPress == True:
+				self.isPress = False
+				self.switch_direction("still")
 
 class Enemy(Charactor):
 	def __init__(self, world, x, y):
