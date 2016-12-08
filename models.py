@@ -12,8 +12,8 @@ class Charactor(Model):
 		self.world = world
 		self.x = x
 		self.y = y
-		self.bullets = []
-
+		self.width = 64
+		self.height = 112		
 
 class World:
 	NUM_ENEMY = 8
@@ -55,6 +55,7 @@ class Player(Charactor):
 		self.y = y
 		self.direction = Player.DIR_STILL
 		self.isPress = False
+		self.bullets = Bullets(self.world);
 
 	def animate(self,delta):
 		if self.direction == Player.DIR_RIGHT:
@@ -67,6 +68,7 @@ class Player(Charactor):
 			self.x -= 5
 		if self.direction == Player.DIR_STILL:
 			self.x += 0
+		self.bullets.animate(delta)
 
 	def switch_direction(self, new_direction):
 		if new_direction == "left":
@@ -76,12 +78,20 @@ class Player(Charactor):
 		elif new_direction == "still":
 			self.direction = Player.DIR_STILL
 
+	# def shoot(self):
+	# 	bullet = Bullet(self.world, self.x, self.y + self.height/2, 0, 3)
+	# 	self.bullets.append(bullet)
+
 	def on_key_press(self, key, key_modifiers):
 		if key == arcade.key.LEFT:
 			self.switch_direction("left")
+			self.isPress = True
 		if key == arcade.key.RIGHT:
 			self.switch_direction("right")
-		self.isPress = True
+			self.isPress = True
+		if key == arcade.key.SPACE:
+			self.bullets.shoot(self.x, self.y + self.height/2, 0, 3)
+			print("shoot")
 
 	def on_key_release(self, key, key_modifiers):
 		if key == arcade.key.LEFT or key == arcade.key.RIGHT:
@@ -97,11 +107,11 @@ class Enemy(Charactor):
 		self.y = y
 
 class Bullet(Model):
-	def __init__(self, world, x, y):
-		super(). __init__(world, x, y, 0)
-		self.vx = 1
-		self.vy = 1
-	
+	def __init__(self, world, x, y, vx, vy):
+		super(). __init__(world, x, y)
+		self.vx = vx
+		self.vy = vy
+
 	def animate(self, delta):
 		if (self.x < 0) or (self.x > self.world.width):
 			self.vx -= self.vx
@@ -112,3 +122,16 @@ class Bullet(Model):
 		self.x += self.vx
 		self.y += self.vy
 
+class Bullets():
+	def __init__(self, world):
+		print("build")
+		self.bulletsList = []
+		self.world = world
+
+	def animate(self, delta):
+		for bullet in self.bulletsList:
+			bullet.animate(delta);
+
+	def shoot(self, x, y, vx, vy):
+		bullet = Bullet(self.world, x, y, vx, vy)
+		self.bulletsList.append(bullet)

@@ -34,11 +34,16 @@ class SpaceGameWindow(arcade.Window):
     	for enemy in self.world.enemies:
         	self.enemy_sprites.append(ModelSprite('images/rocket2.png',scale=0.5,model=enemy))
 
+    	self.bullet_sprites = []
+
 
     def on_draw(self):
     	arcade.start_render()
+    	self.update()
     	self.player_sprite.draw()
     	for sprite in self.enemy_sprites:
+    		sprite.draw()
+    	for sprite in self.bullet_sprites:
     		sprite.draw()
 
     def animate(self, delta):
@@ -49,6 +54,10 @@ class SpaceGameWindow(arcade.Window):
 
     def on_key_release(self, key, key_modifiers):
     	self.world.on_key_release(key, key_modifiers)
+
+    def update(self):
+    	for bullet in self.world.player.bullets.bulletsList:
+        	self.bullet_sprites.append(ModelSprite('images/bullet.png',scale=0.5,model=bullet))
 
 if __name__ == '__main__':
     window = SpaceGameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
