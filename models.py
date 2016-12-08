@@ -6,14 +6,27 @@ class Model:
 		self.x = x
 		self.y = y
 
+	def hit(self, other, hit_size):
+		return (abs(self.x - other.x) <= hit_size) and (abs(self.y - other.y) <= hit_size)
+
 class Charactor(Model):
 	def __init__(self, world, x, y):
 		super().__init__(world,x,y)
 		self.world = world
 		self.x = x
 		self.y = y
+		self.LIFE = 50
 		self.width = 64
-		self.height = 112		
+		self.height = 112
+		self.bullets = Bullets(self.world);
+
+	def animate(self, delta):
+		for bullet in self.bullets.bulletsList:
+			if self.hit(bullet , 64):
+				self.bullets.bulletsList.remove(bullet)
+				print("remove")
+
+
 
 class World:
 	NUM_ENEMY = 8
@@ -35,6 +48,8 @@ class World:
 
 	def animate(self, delta):
 		self.player.animate(delta)
+		for enemy in self.enemies:
+			enemy.update(delta)
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)
@@ -78,10 +93,6 @@ class Player(Charactor):
 		elif new_direction == "still":
 			self.direction = Player.DIR_STILL
 
-	# def shoot(self):
-	# 	bullet = Bullet(self.world, self.x, self.y + self.height/2, 0, 3)
-	# 	self.bullets.append(bullet)
-
 	def on_key_press(self, key, key_modifiers):
 		if key == arcade.key.LEFT:
 			self.switch_direction("left")
@@ -91,7 +102,7 @@ class Player(Charactor):
 			self.isPress = True
 		if key == arcade.key.SPACE:
 			self.bullets.shoot(self.x, self.y + self.height/2, 0, 3)
-			print("shoot")
+			# print("shoot")
 
 	def on_key_release(self, key, key_modifiers):
 		if key == arcade.key.LEFT or key == arcade.key.RIGHT:
@@ -105,6 +116,10 @@ class Enemy(Charactor):
 		self.world = world
 		self.x = x
 		self.y = y
+
+	def update(self,delta):
+		super().animate(delta)
+		# print("hit")
 
 class Bullet(Model):
 	def __init__(self, world, x, y, vx, vy):
@@ -122,6 +137,10 @@ class Bullet(Model):
 		self.x += self.vx
 		self.y += self.vy
 
+	def is_bullet_out_of_bound(self):
+		if self.y >= self.world.height:
+			return True
+
 class Bullets():
 	def __init__(self, world):
 		print("build")
@@ -129,9 +148,17 @@ class Bullets():
 		self.world = world
 
 	def animate(self, delta):
+		self.update()
 		for bullet in self.bulletsList:
 			bullet.animate(delta);
 
 	def shoot(self, x, y, vx, vy):
 		bullet = Bullet(self.world, x, y, vx, vy)
 		self.bulletsList.append(bullet)
+
+	def update(self):
+		for bullet in self.bulletsList:
+			if bullet.is_bullet_out_of_bound():
+				self.bulletsList.remove(bullet)
+				print("remove")
+
