@@ -38,7 +38,7 @@ class SpaceGameWindow(arcade.Window):
     	for sprite in self.bullet_sprites:
     		sprite.draw()
     	arcade.draw_text("score: "+str(self.world.score), self.width-150, self.height-30, arcade.color.WHITE, 20)
-    	arcade.draw_text("time: "+str(self.world.current_time), self.width-150, self.height-60, arcade.color.WHITE, 20)
+    	arcade.draw_text("time: "+str(round(self.world.current_time,2)), self.width-150, self.height-60, arcade.color.WHITE, 20)
 
 
     def animate(self, delta):
