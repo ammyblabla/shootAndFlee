@@ -1,7 +1,7 @@
 import arcade.key
 import gc
 from random import randint,random
-import time
+from time import time
 
 class Model:
 	def __init__(self,world,x,y):
@@ -87,13 +87,13 @@ class World:
 		self.player = Player(self, width/2 , 56)
 		self.bullets = Bullets(self)
 		self.score = 0
-		self.start_time = time.time()
-		self.current_time = (time.time() - self.start_time)/100
+		self.start_time = time()
+		self.current_time = (time() - self.start_time)
 
 	def animate(self, delta):
 		self.player.animate(delta)
 		self.bullets.animate(delta)
-		self.current_time = (time.time() - self.start_time)/100
+		self.current_time = (time() - self.start_time)
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)
