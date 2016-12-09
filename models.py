@@ -8,8 +8,8 @@ class Model:
 		self.x = x
 		self.y = y
 
-	def hit(self, other, hit_size):
-		return (abs(self.x - other.x) <= hit_size) and (abs(self.y - other.y) <= hit_size)
+	def hit(self, other, hit_sizeX, hit_sizeY):
+		return (abs(self.x - other.x) <= hit_sizeX) and (abs(self.y - other.y) <= hit_sizeY)
 
 class Bullets():
 	NUM_BULLET = 8
@@ -113,7 +113,7 @@ class Player(Model):
 		self.bullets.animate(delta)
 
 		for bullet in self.bullets.bulletsList:
-			if self.hit(bullet, 20):
+			if self.hit(bullet, 20, 60):
 				self.world.score += 1
 				bullet.random()
 
