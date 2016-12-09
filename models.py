@@ -1,6 +1,7 @@
 import arcade.key
 import gc
 from random import randint,random
+import time
 
 class Model:
 	def __init__(self,world,x,y):
@@ -80,16 +81,23 @@ class World:
 		self.player = Player(self, width/2 , 56)
 		self.bullets = Bullets(self)
 		self.score = 0
+		self.start_time = time.time()
+		self.current_time = time.time() - self.start_time
 
 	def animate(self, delta):
 		self.player.animate(delta)
 		self.bullets.animate(delta)
+		self.current_time = time.time() - self.start_time
+
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)
 
 	def on_key_release(self, key, key_modifiers):
 		self.player.on_key_release(key,key_modifiers)
+
+	
+
 
 class Player(Model):
 	DIR_LEFT = -1
@@ -146,7 +154,6 @@ class Player(Model):
 			self.isPress = True
 		if key == arcade.key.SPACE:
 			self.bullets.shoot(self.x, self.y + self.height/2, 0, 3)
-			# print("shoot")
 
 	def on_key_release(self, key, key_modifiers):
 		if key == arcade.key.LEFT or key == arcade.key.RIGHT:
