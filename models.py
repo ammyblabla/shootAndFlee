@@ -40,6 +40,10 @@ class Bullets():
 				bullet.random();
 				print(bullet.x, bullet.y, bullet.vx)
 
+	def addBulletByTime(self):
+		if(world.current_time % 5 == 0):
+			self.bulletsList.append(self.world, 0, world.height, 0, 0)
+
 class Bullet(Model):
 	def __init__(self, world, x, y, vx, vy):
 		super(). __init__(world, x, y)
@@ -48,6 +52,7 @@ class Bullet(Model):
 		self.x = x
 		self.y = y
 		self.world = world
+		self.random()
 
 	def animate(self, delta):
 		if (self.x < 0) or (self.x > self.world.width):
@@ -73,6 +78,7 @@ class Bullet(Model):
 		self.vx = 5 * (random() - 0.5)
 		self.vy = 5 * random()
 
+
 class World:
 	def __init__(self, width, height):
 		self.width = width
@@ -82,22 +88,18 @@ class World:
 		self.bullets = Bullets(self)
 		self.score = 0
 		self.start_time = time.time()
-		self.current_time = time.time() - self.start_time
+		self.current_time = (time.time() - self.start_time)/100
 
 	def animate(self, delta):
 		self.player.animate(delta)
 		self.bullets.animate(delta)
-		self.current_time = time.time() - self.start_time
-
+		self.current_time = (time.time() - self.start_time)/100
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)
 
 	def on_key_release(self, key, key_modifiers):
 		self.player.on_key_release(key,key_modifiers)
-
-	
-
 
 class Player(Model):
 	DIR_LEFT = -1
