@@ -3,6 +3,11 @@ import gc
 from random import randint,random
 from time import time
 
+GAME_MENU = 1
+GAME_RUNNING = 2
+GAME_OVER = 3
+GAME_PAUSE = 4
+
 class Model:
 	def __init__(self,world,x,y):
 		self.world = world
@@ -41,7 +46,7 @@ class Bullets():
 				print(bullet.x, bullet.y, bullet.vx)
 
 	def addBulletByTime(self):
-		if(world.current_time % 5 == 0):
+		if(world.current_time % 3 == 0):
 			self.bulletsList.append(self.world, 0, world.height, 0, 0)
 
 class Bullet(Model):
@@ -52,6 +57,7 @@ class Bullet(Model):
 		self.x = x
 		self.y = y
 		self.world = world
+		self.speed = 20
 		self.random()
 
 	def animate(self, delta):
@@ -75,8 +81,8 @@ class Bullet(Model):
 	def random(self):
 		self.x = 400 * random()
 		self.y = self.world.height
-		self.vx = 5 * (random() - 0.5)
-		self.vy = 5 * random()
+		self.vx = self.speed * (random() - 0.5)
+		self.vy = self.speed * random()
 
 
 class World:
@@ -87,6 +93,8 @@ class World:
 		self.player = Player(self, width/2 , 56)
 		self.bullets = Bullets(self)
 		self.score = 0
+		# self.current_state = GAME_MENU
+		self.current_state = GAME_RUNNING
 		self.start_time = time()
 		self.current_time = (time() - self.start_time)
 
@@ -117,6 +125,7 @@ class Player(Model):
 		self.direction = Player.DIR_STILL
 		self.isPress = False
 		self.bullets = Bullets(self.world);
+		self.speed = 20
 
 	def animate(self,delta):
 		self.move()
@@ -131,11 +140,11 @@ class Player(Model):
 		if self.direction == Player.DIR_RIGHT:
 			if self.x > self.world.width:
 				self.x = 0
-			self.x += 5
+			self.x += self.speed
 		if self.direction == Player.DIR_LEFT:
 			if self.x < 0:
 				self.x = self.world.width
-			self.x -= 5
+			self.x -= self.speed
 		if self.direction == Player.DIR_STILL:
 			self.x += 0
 
