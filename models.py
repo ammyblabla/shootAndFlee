@@ -7,7 +7,7 @@ GAME_MENU = 1
 GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
-GAME_TIME = 5
+GAME_TIME = 30
 
 class Model:
 	def __init__(self,world,x,y):
@@ -100,18 +100,31 @@ class World:
 		self.current_time = (time() - self.start_time)
 
 	def animate(self, delta):
-		self.player.animate(delta)
-		self.bullets.animate(delta)
-		self.current_time = (time() - self.start_time)
+		if self.current_state == GAME_RUNNING:
+			self.player.animate(delta)
+			self.bullets.animate(delta)
+			self.current_time = (time() - self.start_time)
 
-		if(self.current_time >= GAME_TIME):
-			self.current_state = GAME_OVER
+			if(self.current_time >= GAME_TIME):
+				self.current_state = GAME_OVER
+
+		elif self.current_state == GAME_PAUSE:
+			self.start_time += delta
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)
+		self.on_key_press_state(key,key_modifiers)
 
 	def on_key_release(self, key, key_modifiers):
 		self.player.on_key_release(key,key_modifiers)
+
+	def on_key_press_state(self, key, key_modifiers):
+		if key == arcade.key.SPACE and self.current_state == GAME_RUNNING:
+		# if key == arcade.key.SPACE:
+			print(self.current_state)
+			self.current_state = GAME_PAUSE
+		elif key == arcade.key.SPACE and self.current_state == GAME_PAUSE:
+			self.current_state = GAME_RUNNING
 
 class Player(Model):
 	DIR_LEFT = -1
@@ -167,8 +180,6 @@ class Player(Model):
 		if key == arcade.key.RIGHT:
 			self.switch_direction("right")
 			self.isPress = True
-		if key == arcade.key.SPACE:
-			self.bullets.shoot(self.x, self.y + self.height/2, 0, 3)
 
 	def on_key_release(self, key, key_modifiers):
 		if key == arcade.key.LEFT or key == arcade.key.RIGHT:

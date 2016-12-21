@@ -11,7 +11,7 @@ GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
 
-GAME_TIME = 5
+GAME_TIME = 30
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
@@ -43,12 +43,12 @@ class SpaceGameWindow(arcade.Window):
     	arcade.start_render()
     	# self.draw_game()
 
-        # if self.current_state == GAME_MENU:
+        # if self.world.current_state == GAME_MENU:
         #     self.draw_menu()
     	if self.world.current_state == GAME_RUNNING:
         	self.draw_game()
-        # elif self.current_state == GAME_PAUSE:
-        #     self.draw_pause()
+    	elif self.world.current_state == GAME_PAUSE:
+        	self.draw_pause()
     	else:
             self.draw_game_over()
 
@@ -67,6 +67,10 @@ class SpaceGameWindow(arcade.Window):
 
         output = "Click to restart"
         arcade.draw_text(output, 200, 300, arcade.color.WHITE, 24)
+	
+    def draw_pause(self):
+        output = "Pause"
+        arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
 
     def animate(self, delta):
     	self.world.animate(delta)
