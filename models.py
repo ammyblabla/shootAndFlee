@@ -7,6 +7,7 @@ GAME_MENU = 1
 GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
+GAME_TIME = 5
 
 class Model:
 	def __init__(self,world,x,y):
@@ -102,6 +103,9 @@ class World:
 		self.player.animate(delta)
 		self.bullets.animate(delta)
 		self.current_time = (time() - self.start_time)
+
+		if(self.current_time >= GAME_TIME):
+			self.current_state = GAME_OVER
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)

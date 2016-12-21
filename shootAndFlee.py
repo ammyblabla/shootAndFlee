@@ -11,6 +11,8 @@ GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
 
+GAME_TIME = 5
+
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('model', None)
@@ -47,8 +49,8 @@ class SpaceGameWindow(arcade.Window):
         	self.draw_game()
         # elif self.current_state == GAME_PAUSE:
         #     self.draw_pause()
-        # else
-        #     self.draw_game_over()
+    	else:
+            self.draw_game_over()
 
 
     def draw_game(self):
@@ -57,14 +59,14 @@ class SpaceGameWindow(arcade.Window):
     	for sprite in self.bullet_sprites:
     		sprite.draw()
     	arcade.draw_text("score: "+str(self.world.score), self.width-150, self.height-30, arcade.color.WHITE, 20)
-    	arcade.draw_text("time: "+str(round(self.world.current_time,2)), self.width-150, self.height-60, arcade.color.WHITE, 20)
+    	arcade.draw_text("time: "+str(GAME_TIME - round(self.world.current_time,2)), self.width-150, self.height-60, arcade.color.WHITE, 20)
 
     def draw_game_over(self):
         output = "Game Over"
-        arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
+        arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
 
         output = "Click to restart"
-        arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
+        arcade.draw_text(output, 200, 300, arcade.color.WHITE, 24)
 
     def animate(self, delta):
     	self.world.animate(delta)
