@@ -94,8 +94,9 @@ class World:
 		self.player = Player(self, width/2 , 56)
 		self.bullets = Bullets(self)
 		self.score = 0
-		# self.current_state = GAME_MENU
-		self.current_state = GAME_RUNNING
+		self.jar = 0
+		self.current_state = GAME_MENU
+		# self.current_state = GAME_RUNNING
 		self.start_time = time()
 		self.current_time = (time() - self.start_time)
 
@@ -104,6 +105,7 @@ class World:
 			self.player.animate(delta)
 			self.bullets.animate(delta)
 			self.current_time = (time() - self.start_time)
+			self.jar = (int)(self.score/4)
 
 			if(self.current_time >= GAME_TIME):
 				self.current_state = GAME_OVER
@@ -120,10 +122,10 @@ class World:
 
 	def on_key_press_state(self, key, key_modifiers):
 		if key == arcade.key.SPACE and self.current_state == GAME_RUNNING:
-		# if key == arcade.key.SPACE:
-			print(self.current_state)
 			self.current_state = GAME_PAUSE
 		elif key == arcade.key.SPACE and self.current_state == GAME_PAUSE:
+			self.current_state = GAME_RUNNING
+		elif key == arcade.key.SPACE and self.current_state == GAME_MENU:
 			self.current_state = GAME_RUNNING
 
 class Player(Model):

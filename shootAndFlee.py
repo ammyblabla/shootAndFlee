@@ -43,9 +43,9 @@ class SpaceGameWindow(arcade.Window):
     	arcade.start_render()
     	# self.draw_game()
 
-        # if self.world.current_state == GAME_MENU:
-        #     self.draw_menu()
-    	if self.world.current_state == GAME_RUNNING:
+    	if self.world.current_state == GAME_MENU:
+            self.draw_menu()
+    	elif self.world.current_state == GAME_RUNNING:
         	self.draw_game()
     	elif self.world.current_state == GAME_PAUSE:
         	self.draw_pause()
@@ -58,8 +58,9 @@ class SpaceGameWindow(arcade.Window):
     	self.player_sprite.draw()
     	for sprite in self.bullet_sprites:
     		sprite.draw()
-    	arcade.draw_text("score: "+str(self.world.score), self.width-150, self.height-30, arcade.color.WHITE, 20)
-    	arcade.draw_text("time: "+str(GAME_TIME - round(self.world.current_time,2)), self.width-150, self.height-60, arcade.color.WHITE, 20)
+    	arcade.draw_text("time: "+str(GAME_TIME - round(self.world.current_time,2)), self.width-150, self.height-30, arcade.color.WHITE, 20)	
+    	arcade.draw_text("score: "+str(self.world.score), self.width-150, self.height-60, arcade.color.WHITE, 20)
+    	arcade.draw_text("jar: "+str(self.world.jar), self.width-150, self.height-90, arcade.color.WHITE, 20)
 
     def draw_game_over(self):
         output = "Game Over"
@@ -70,6 +71,10 @@ class SpaceGameWindow(arcade.Window):
 	
     def draw_pause(self):
         output = "Pause"
+        arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
+
+    def draw_menu(self):
+        output = "water jar game"
         arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
 
     def animate(self, delta):
