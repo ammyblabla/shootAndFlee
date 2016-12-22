@@ -7,7 +7,7 @@ GAME_MENU = 1
 GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
-GAME_TIME = 30
+GAME_TIME = 5
 
 class Model:
 	def __init__(self,world,x,y):
@@ -28,7 +28,7 @@ class Bullets():
 		for i in range(Bullets.NUM_BULLET):
 			bullet = Bullet(self.world, 0, world.height, 0, 0)
 			bullet.random()
-			print(bullet.x, bullet.y, bullet.vx)
+			# print(bullet.x, bullet.y, bullet.vx)
 			self.bulletsList.append(bullet)
 
 	def animate(self, delta):
@@ -44,7 +44,6 @@ class Bullets():
 		for bullet in self.bulletsList:
 			if bullet.is_bullet_out_of_bound():
 				bullet.random();
-				print(bullet.x, bullet.y, bullet.vx)
 
 	def addBulletByTime(self):
 		if(world.current_time % 3 == 0):
@@ -64,7 +63,7 @@ class Bullet(Model):
 	def animate(self, delta):
 		if (self.x < 0) or (self.x > self.world.width):
 			self.vx *= -1
-			print(self.vx)
+			# print(self.vx)
 
 
 		if (self.y < 0) or (self.y > self.world.height):
@@ -92,13 +91,17 @@ class World:
 		self.height = height
 
 		self.player = Player(self, width/2 , 56)
+		self.current_state = GAME_MENU
+		self.current_time = 0
+		self.setup()
+
+	def setup(self):
+		self.start_time = time()
+		self.current_time = (time() - self.start_time)
+		self.player.setup()
 		self.bullets = Bullets(self)
 		self.score = 0
 		self.jar = 0
-		self.current_state = GAME_MENU
-		# self.current_state = GAME_RUNNING
-		self.start_time = time()
-		self.current_time = (time() - self.start_time)
 
 	def animate(self, delta):
 		if self.current_state == GAME_RUNNING:
@@ -112,6 +115,9 @@ class World:
 
 		elif self.current_state == GAME_PAUSE:
 			self.start_time += delta
+		# print(self.current_state)
+		# print("start: " + str(self.start_time))
+		# print("current: " + str(self.current_time))
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)
@@ -121,12 +127,17 @@ class World:
 		self.player.on_key_release(key,key_modifiers)
 
 	def on_key_press_state(self, key, key_modifiers):
-		if key == arcade.key.SPACE and self.current_state == GAME_RUNNING:
-			self.current_state = GAME_PAUSE
-		elif key == arcade.key.SPACE and self.current_state == GAME_PAUSE:
-			self.current_state = GAME_RUNNING
-		elif key == arcade.key.SPACE and self.current_state == GAME_MENU:
-			self.current_state = GAME_RUNNING
+		if key == arcade.key.SPACE:
+			if self.current_state == GAME_RUNNING:
+				self.current_state = GAME_PAUSE
+			elif self.current_state == GAME_PAUSE:
+				self.current_state = GAME_RUNNING
+			elif self.current_state == GAME_MENU:
+				self.current_state = GAME_RUNNING
+				self.start_time = time()
+			elif self.current_state == GAME_OVER:
+				self.setup()
+				self.current_state = GAME_RUNNING
 
 class Player(Model):
 	DIR_LEFT = -1
@@ -145,6 +156,10 @@ class Player(Model):
 		self.isPress = False
 		self.bullets = Bullets(self.world);
 		self.speed = 20
+
+	def setup(self):
+		self.x = self.world.width/2
+		self.y = 56
 
 	def animate(self,delta):
 		self.move()

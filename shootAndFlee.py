@@ -11,7 +11,7 @@ GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
 
-GAME_TIME = 30
+GAME_TIME = 5
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
@@ -36,12 +36,11 @@ class SpaceGameWindow(arcade.Window):
     	self.world = World(width, height)
     	self.player_sprite = ModelSprite('images/rocket1.png',model=self.world.player)
 
-    	self.bullet_sprites = []
+    	self.setup()
     	self.current_state = GAME_MENU
 
     def on_draw(self):
     	arcade.start_render()
-    	# self.draw_game()
 
     	if self.world.current_state == GAME_MENU:
             self.draw_menu()
@@ -50,8 +49,11 @@ class SpaceGameWindow(arcade.Window):
     	elif self.world.current_state == GAME_PAUSE:
         	self.draw_pause()
     	else:
-            self.draw_game_over()
+    		self.draw_game_over()
+    		self.setup()
 
+    def setup(self):
+        self.bullet_sprites = []
 
     def draw_game(self):
     	self.update()
