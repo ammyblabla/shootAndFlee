@@ -25,11 +25,28 @@ class Bullets():
 		self.world = world
 		self.bulletsList = []
 
+		# for i in range(Bullets.NUM_BULLET):
+		# 	bullet = Bullet(self.world, 0, world.height, 0, 0)
+		# 	bullet.random()
+		# 	# print(bullet.x, bullet.y, bullet.vx)
+		# 	self.bulletsList.append(bullet)
+
+		# self.lastadd = 0
+		# self.lastadd_toxic = 0
+		self.setup()
+
+	def setup(self):
+		# del self.bulletsList [:]
+		self.bulletsList.clear()
+
 		for i in range(Bullets.NUM_BULLET):
-			bullet = Bullet(self.world, 0, world.height, 0, 0)
+			bullet = Bullet(self.world, 0, self.world.height, 0, 0)
 			bullet.random()
 			# print(bullet.x, bullet.y, bullet.vx)
 			self.bulletsList.append(bullet)
+
+		self.lastadd = 0
+		self.lastadd_toxic = 0
 
 	def animate(self, delta):
 		for bullet in self.bulletsList:
@@ -44,11 +61,26 @@ class Bullets():
 		for bullet in self.bulletsList:
 			if bullet.is_bullet_out_of_bound():
 				bullet.random()
+		self.addBulletByTime()
+		print(len(self.bulletsList))
+
 
 	def addBulletByTime(self):
-		if(world.current_time % 1 == 0):
-			self.bulletsList.append(self.world, 0, world.height, 0, 0)
-			self.bulletsList.append(self.world, 0, world.height, 0, 0)
+		current_time = int(self.world.current_time)
+
+		if current_time > self.lastadd and current_time % 5 == 0:
+			# print(current_time)
+			# print("add bullet")
+			# print("lastadd "+str(self.lastadd))
+			self.bulletsList.append(Bullet(self.world, 0, self.world.height, 0, 0))
+			self.bulletsList.append(Bullet(self.world, 0, self.world.height, 0, 0))
+			self.lastadd = current_time
+
+		if current_time > 5 and current_time % 4 == 1 and current_time > self.lastadd_toxic:
+			tmp = Bullet(self.world, 0, self.world.height, 0, 0)
+			tmp.isToxic = True
+			self.bulletsList.append(tmp)
+			self.lastadd_toxic = int(current_time)
 
 
 class Bullet(Model):
@@ -61,6 +93,7 @@ class Bullet(Model):
 		self.world = world
 		self.speed = 20
 		self.random()
+		self.isToxic = False
 
 	def animate(self, delta):
 		if (self.x < 0) or (self.x > self.world.width):
@@ -93,6 +126,7 @@ class World:
 		self.height = height
 
 		self.player = Player(self, width/2 , 56)
+		self.bullets = Bullets(self)
 		self.current_state = GAME_MENU
 		self.current_time = 0
 		self.setup()
@@ -101,7 +135,7 @@ class World:
 		self.start_time = time()
 		self.current_time = (time() - self.start_time)
 		self.player.setup()
-		self.bullets = Bullets(self)
+		self.bullets.setup()
 		self.score = 0
 		self.jar = 0
 
@@ -156,7 +190,7 @@ class Player(Model):
 		self.y = y
 		self.direction = Player.DIR_STILL
 		self.isPress = False
-		self.bullets = Bullets(self.world);
+		# self.bullets = Bullets(self.world);
 		self.speed = 20
 
 	def setup(self):
@@ -165,11 +199,14 @@ class Player(Model):
 
 	def animate(self,delta):
 		self.move()
-		self.bullets.animate(delta)
+		# self.bullets.animate(delta)
 
-		for bullet in self.bullets.bulletsList:
+		for bullet in self.world.bullets.bulletsList:
 			if self.hit(bullet, 20, 60):
-				self.world.score += 1
+				if bullet.isToxic == False:
+					self.world.score += 1
+				elif bullet.isToxic == True:
+					self.world.score -= self.world.score % 4
 				bullet.random()
 
 	def move(self):

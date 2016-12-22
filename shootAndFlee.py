@@ -19,6 +19,7 @@ class ModelSprite(arcade.Sprite):
 
         super().__init__(*args, **kwargs)
 
+
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
@@ -26,6 +27,7 @@ class ModelSprite(arcade.Sprite):
     def draw(self):
         self.sync_with_model()
         super().draw()
+
 
 class SpaceGameWindow(arcade.Window):
     def __init__(self, width, height):
@@ -36,8 +38,8 @@ class SpaceGameWindow(arcade.Window):
     	self.world = World(width, height)
     	self.player_sprite = ModelSprite('images/jar1.png',model=self.world.player)
     	self.background = arcade.load_texture("images/background.jpg")
+    	self.bullet_sprites = []
 
-    	self.setup()
     	self.current_state = GAME_MENU
 
     def on_draw(self):     
@@ -55,7 +57,8 @@ class SpaceGameWindow(arcade.Window):
     		self.setup()
 
     def setup(self):
-        self.bullet_sprites = []
+    	# del self.bullet_sprites[:]
+    	self.bullet_sprites.clear()
 
     def draw_game(self):
     	self.update()
@@ -78,10 +81,9 @@ class SpaceGameWindow(arcade.Window):
         output = "Space to restart"
         arcade.draw_text(output, 175, 300, arcade.color.WHITE, 24)
 
-        output = "Jar: " + str(self.world.score)
+        output = "Jar: " + str(self.world.jar)
         arcade.draw_text(output, 175, 200, arcade.color.WHITE, 24)
 
-	
     def draw_pause(self):
         output = "Pause"
         arcade.draw_text(output, 150, 400, arcade.color.WHITE, 36)
@@ -100,8 +102,12 @@ class SpaceGameWindow(arcade.Window):
     	self.world.on_key_release(key, key_modifiers)
 
     def update(self):
-    	for bullet in self.world.player.bullets.bulletsList:
-        	self.bullet_sprites.append(ModelSprite('images/bullet.png',model=bullet))
+    	for bullet in self.world.bullets.bulletsList:
+    		if bullet.isToxic == False:
+        		self.bullet_sprites.append(ModelSprite('images/bullet.png',model=bullet))
+    		elif bullet.isToxic == True:
+        		self.bullet_sprites.append(ModelSprite('images/bullet_toxic.png',model=bullet))
+
 
 if __name__ == '__main__':
     window = SpaceGameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
