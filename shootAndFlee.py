@@ -34,7 +34,7 @@ class SpaceGameWindow(arcade.Window):
     	arcade.set_background_color(arcade.color.BLACK)
 
     	self.world = World(width, height)
-    	self.player_sprite = ModelSprite('images/rocket1.png',model=self.world.player)
+    	self.player_sprite = ModelSprite('images/jar0.png',model=self.world.player)
     	self.background = arcade.load_texture("images/background.jpg")
 
     	self.setup()
@@ -70,7 +70,7 @@ class SpaceGameWindow(arcade.Window):
         output = "Game Over"
         arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
 
-        output = "Click to restart"
+        output = "Space to restart"
         arcade.draw_text(output, 200, 300, arcade.color.WHITE, 24)
 	
     def draw_pause(self):
