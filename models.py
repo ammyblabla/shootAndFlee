@@ -7,7 +7,7 @@ GAME_MENU = 1
 GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
-GAME_TIME = 5
+GAME_TIME = 30
 
 class Model:
 	def __init__(self,world,x,y):

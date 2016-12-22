@@ -11,7 +11,7 @@ GAME_RUNNING = 2
 GAME_OVER = 3
 GAME_PAUSE = 4
 
-GAME_TIME = 5
+GAME_TIME = 30
 
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
@@ -34,7 +34,7 @@ class SpaceGameWindow(arcade.Window):
     	arcade.set_background_color(arcade.color.BLACK)
 
     	self.world = World(width, height)
-    	self.player_sprite = ModelSprite('images/jar0.png',model=self.world.player)
+    	self.player_sprite = ModelSprite('images/jar1.png',model=self.world.player)
     	self.background = arcade.load_texture("images/background.jpg")
 
     	self.setup()
@@ -59,27 +59,33 @@ class SpaceGameWindow(arcade.Window):
 
     def draw_game(self):
     	self.update()
-    	self.player_sprite.draw()
+    	# self.player_sprite.draw()
+    	self.draw_player()
     	for sprite in self.bullet_sprites:
     		sprite.draw()
     	arcade.draw_text("time: "+str(GAME_TIME - round(self.world.current_time,2)), self.width-150, self.height-30, arcade.color.WHITE, 20)	
     	arcade.draw_text("score: "+str(self.world.score), self.width-150, self.height-60, arcade.color.WHITE, 20)
     	arcade.draw_text("jar: "+str(self.world.jar), self.width-150, self.height-90, arcade.color.WHITE, 20)
 
+    def draw_player(self):
+    	jar = self.world.score % 4
+    	self.player_sprite = ModelSprite('images/jar'+str(self.world.score%4)+'.png',model=self.world.player)
+    	self.player_sprite.draw()
+
     def draw_game_over(self):
         output = "Game Over"
         arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
 
         output = "Space to restart"
-        arcade.draw_text(output, 200, 300, arcade.color.WHITE, 24)
+        arcade.draw_text(output, 175, 300, arcade.color.WHITE, 24)
 	
     def draw_pause(self):
         output = "Pause"
-        arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
+        arcade.draw_text(output, 150, 400, arcade.color.WHITE, 36)
 
     def draw_menu(self):
         output = "water jar game"
-        arcade.draw_text(output, 175, 400, arcade.color.WHITE, 36)
+        arcade.draw_text(output, 125, 400, arcade.color.WHITE, 36)
 
     def animate(self, delta):
     	self.world.animate(delta)
