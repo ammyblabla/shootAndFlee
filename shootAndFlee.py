@@ -63,9 +63,8 @@ class SpaceGameWindow(arcade.Window):
     	self.draw_player()
     	for sprite in self.bullet_sprites:
     		sprite.draw()
-    	arcade.draw_text("time: "+str(GAME_TIME - round(self.world.current_time,2)), self.width-150, self.height-30, arcade.color.WHITE, 20)	
-    	arcade.draw_text("score: "+str(self.world.score), self.width-150, self.height-60, arcade.color.WHITE, 20)
-    	arcade.draw_text("jar: "+str(self.world.jar), self.width-150, self.height-90, arcade.color.WHITE, 20)
+    	arcade.draw_text("time: "+str(GAME_TIME - round(self.world.current_time,2)), self.width-155, self.height-30, arcade.color.WHITE, 20)	
+    	arcade.draw_text("Jar: "+str(self.world.jar), self.width-155, self.height-60, arcade.color.WHITE, 20)
 
     def draw_player(self):
     	jar = self.world.score % 4
@@ -78,6 +77,10 @@ class SpaceGameWindow(arcade.Window):
 
         output = "Space to restart"
         arcade.draw_text(output, 175, 300, arcade.color.WHITE, 24)
+
+        output = "Jar: " + str(self.world.score)
+        arcade.draw_text(output, 175, 200, arcade.color.WHITE, 24)
+
 	
     def draw_pause(self):
         output = "Pause"

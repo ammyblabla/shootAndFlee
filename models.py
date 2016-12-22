@@ -43,11 +43,13 @@ class Bullets():
 	def update(self):
 		for bullet in self.bulletsList:
 			if bullet.is_bullet_out_of_bound():
-				bullet.random();
+				bullet.random()
 
 	def addBulletByTime(self):
-		if(world.current_time % 3 == 0):
+		if(world.current_time % 1 == 0):
 			self.bulletsList.append(self.world, 0, world.height, 0, 0)
+			self.bulletsList.append(self.world, 0, world.height, 0, 0)
+
 
 class Bullet(Model):
 	def __init__(self, world, x, y, vx, vy):
