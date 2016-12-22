@@ -35,12 +35,14 @@ class SpaceGameWindow(arcade.Window):
 
     	self.world = World(width, height)
     	self.player_sprite = ModelSprite('images/rocket1.png',model=self.world.player)
+    	self.background = arcade.load_texture("images/background.jpg")
 
     	self.setup()
     	self.current_state = GAME_MENU
 
-    def on_draw(self):
+    def on_draw(self):     
     	arcade.start_render()
+    	arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT //2,self.background.width,self.background.height, self.background, 0)
 
     	if self.world.current_state == GAME_MENU:
             self.draw_menu()
