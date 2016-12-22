@@ -108,7 +108,6 @@ class SpaceGameWindow(arcade.Window):
     		elif bullet.isToxic == True:
         		self.bullet_sprites.append(ModelSprite('images/bullet_toxic.png',model=bullet))
 
-
 if __name__ == '__main__':
     window = SpaceGameWindow(SCREEN_WIDTH, SCREEN_HEIGHT)
     arcade.run()

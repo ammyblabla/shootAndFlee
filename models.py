@@ -25,14 +25,6 @@ class Bullets():
 		self.world = world
 		self.bulletsList = []
 
-		# for i in range(Bullets.NUM_BULLET):
-		# 	bullet = Bullet(self.world, 0, world.height, 0, 0)
-		# 	bullet.random()
-		# 	# print(bullet.x, bullet.y, bullet.vx)
-		# 	self.bulletsList.append(bullet)
-
-		# self.lastadd = 0
-		# self.lastadd_toxic = 0
 		self.setup()
 
 	def setup(self):
@@ -42,7 +34,6 @@ class Bullets():
 		for i in range(Bullets.NUM_BULLET):
 			bullet = Bullet(self.world, 0, self.world.height, 0, 0)
 			bullet.random()
-			# print(bullet.x, bullet.y, bullet.vx)
 			self.bulletsList.append(bullet)
 
 		self.lastadd = 0
@@ -62,16 +53,12 @@ class Bullets():
 			if bullet.is_bullet_out_of_bound():
 				bullet.random()
 		self.addBulletByTime()
-		print(len(self.bulletsList))
 
 
 	def addBulletByTime(self):
 		current_time = int(self.world.current_time)
 
 		if current_time > self.lastadd and current_time % 5 == 0:
-			# print(current_time)
-			# print("add bullet")
-			# print("lastadd "+str(self.lastadd))
 			self.bulletsList.append(Bullet(self.world, 0, self.world.height, 0, 0))
 			self.bulletsList.append(Bullet(self.world, 0, self.world.height, 0, 0))
 			self.lastadd = current_time
@@ -98,8 +85,6 @@ class Bullet(Model):
 	def animate(self, delta):
 		if (self.x < 0) or (self.x > self.world.width):
 			self.vx *= -1
-			# print(self.vx)
-
 
 		if (self.y < 0) or (self.y > self.world.height):
 			self.vy -= self.vy
@@ -151,9 +136,6 @@ class World:
 
 		elif self.current_state == GAME_PAUSE:
 			self.start_time += delta
-		# print(self.current_state)
-		# print("start: " + str(self.start_time))
-		# print("current: " + str(self.current_time))
 
 	def on_key_press(self, key, key_modifiers):
 		self.player.on_key_press(key,key_modifiers)
@@ -206,7 +188,10 @@ class Player(Model):
 				if bullet.isToxic == False:
 					self.world.score += 1
 				elif bullet.isToxic == True:
-					self.world.score -= self.world.score % 4
+					if self.world.score % 4 == 0:
+						self.world.score -= 4
+					else:
+						self.world.score -= self.world.score % 4
 				bullet.random()
 
 	def move(self):
