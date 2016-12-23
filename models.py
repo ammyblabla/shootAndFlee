@@ -125,6 +125,7 @@ class World:
 		self.jar = 0
 
 	def animate(self, delta):
+		#print(self.current_time)
 		if self.current_state == GAME_RUNNING:
 			self.player.animate(delta)
 			self.bullets.animate(delta)

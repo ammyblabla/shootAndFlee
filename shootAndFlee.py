@@ -66,7 +66,7 @@ class SpaceGameWindow(arcade.Window):
     	self.draw_player()
     	for sprite in self.bullet_sprites:
     		sprite.draw()
-    	arcade.draw_text("time: "+str(GAME_TIME - round(self.world.current_time,2)), self.width-155, self.height-30, arcade.color.WHITE, 20)	
+    	arcade.draw_text("time: "+"%.2f"%(GAME_TIME - self.world.current_time), self.width-155, self.height-30, arcade.color.WHITE, 20)	
     	arcade.draw_text("Jar: "+str(self.world.jar), self.width-155, self.height-60, arcade.color.WHITE, 20)
 
     def draw_player(self):
